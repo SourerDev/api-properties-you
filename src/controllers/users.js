@@ -13,13 +13,12 @@ const {
 } = require("../utils/nodemailer/nodemailer.js");
 
 //here
-const { hashPassword, verifyPassword } = require("../utils");
-const { generateToken } = require("../utils");
+const { hashPassword, verifyPassword, generateToken } = require("../utils");
 
 //POST
 const signUp = async (req, res) => {
-  const { fName, lName, userName, password, email } = req.body;
-  if (!fName || !lName || !userName || !password || !email)
+  const { fName, lName, password, email, cellphone, userName } = req.body;
+  if (!fName || !lName || !cellphone || !password || !email)
     return res.status(400).send("Some data are missing");
 
   try {
@@ -29,12 +28,33 @@ const signUp = async (req, res) => {
 
     if (findUser) return res.status(409).send("User already exist");
     const hashPass = await hashPassword(password);
-    const user = await User.create({
+    const _user = await User.create({
       lName,
       fName,
       userName,
       email,
+      cellphone,
       password: hashPass,
+    });
+
+    const user = {};
+    for (const key in _user.dataValues) {
+      if (key !== "password") user[key] = _user[key];
+    }
+
+    const token = generateToken({
+      id: user.idUser,
+      email: user.email,
+      user: user.userName,
+      type: user.userType,
+    });
+
+    return res.send({
+      info: {
+        message: "Usuario created successfully",
+      },
+      user,
+      token,
     });
 
     /*     //notify property created succes
@@ -54,7 +74,6 @@ const signUp = async (req, res) => {
     );
     //NODEMAILER, SEND EMAIL TO USER
     const info = await transport.sendMail(registerMessage(userName, email)); */
-    return res.send({ Message: "Usuario creado" });
   } catch (err) {
     return res.status(500).send({ Error: err.message });
   }
@@ -74,7 +93,7 @@ const signIn = async (req, res) => {
 
     const passwordMatch = await verifyPassword(_user.password, password);
     if (!passwordMatch)
-      res.status(401).json({ Error: "Incorrect email or password." });
+      return res.status(401).json({ Error: "Incorrect email or password." });
 
     if (_user.state === "blocked")
       return res.status(401).json({ Error: "This user is blocked" });
@@ -90,7 +109,7 @@ const signIn = async (req, res) => {
     for (const key in _user.dataValues) {
       if (key !== "password") user[key] = _user[key];
     }
-    
+
     res.json({ user, token: token });
   } catch (error) {
     res.status(400).json({ Error: error.message });
@@ -163,17 +182,36 @@ const setState = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { idUser } = req.params;
-  try {
-    let user = await User.findByPk(idUser);
-    if (!user?.idUser) return res.status(404).json({ Error: "User not found" });
+  if (idUser == undefined || idUser == null)
+    return res.status(400).json({ error: { message: "idUser is required" } });
 
-    await User.update(req.body, {
+  try {
+    const newData = {};
+    for (const key in req.body) {
+      if (["lName", "fName", "userName", "cellphone", "photo"].includes(key)) {
+        newData[key] = req.body[key];
+      }
+    }
+
+    await User.update(newData, {
       where: {
-        idUser: idUser,
+        idUser,
       },
     });
 
-    res.status(200).send({ Message: "User Updated" });
+    const user = await User.findOne({
+      where: { idUser },
+      attributes: { exclude: ["password"] },
+    });
+    if (!user)
+      return res.status(404).json({ error: { message: "User not found" } });
+
+    res.status(200).send({
+      info: {
+        message: "user updated",
+      },
+      user,
+    });
   } catch (err) {
     res.status(404).send({ Error: err.message });
   }

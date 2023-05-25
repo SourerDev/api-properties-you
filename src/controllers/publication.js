@@ -1,5 +1,14 @@
-const { Op} = require("sequelize");
-const { Publication, User, Property, House, Apartment } = require("../db");
+const { Op } = require("sequelize");
+const {
+  Publication,
+  User,
+  Property,
+  House,
+  Apartment,
+  City,
+  PH,
+  Ranch,
+} = require("../db");
 const { checkRequiredPublicationEntries, PropertyType } =
   require("../utils").entries;
 
@@ -33,22 +42,35 @@ module.exports = {
     const { idPublication } = req.params;
 
     try {
-      const publication = await Publication.findOne({
+      const _publication = await Publication.findOne({
         where: { idPublication },
         include: [
           { model: User, attributes: { exclude: ["password"] } },
-          { model: Property, attributes: { exclude: ["idUser"] } },
+          {
+            model: Property,
+            include: [{ model: City }],
+            attributes: { exclude: ["idUser", "idCity"] },
+          },
         ],
         attributes: { exclude: ["idUser", "idProperty"] },
       });
 
-      if (!publication)
+      if (!_publication)
         return res.status(404).json({
           error: {
             message: "Publication not Found",
           },
         });
-
+      const publication = {
+        ..._publication.dataValues,
+        User: { ..._publication.dataValues.User.dataValues },
+        Property: {
+          ..._publication.dataValues.Property.dataValues,
+          City: {
+            ..._publication.dataValues.Property.dataValues.City.dataValues,
+          },
+        },
+      };
       const PROPERTY_TYPE = publication.Property.type;
       const { idProperty } = publication.Property;
 
@@ -56,11 +78,13 @@ module.exports = {
         PROPERTY_TYPE,
         idProperty
       );
+      publication.Property[PROPERTY_TYPE] = {
+        ...PropertyTypeInfo.dataValues,
+      };
 
       res.status(200).json({
         info: {},
         publication,
-        PropertyTypeInfo,
       });
     } catch (error) {
       res.status(500).json({
@@ -126,18 +150,21 @@ async function getPropertyByType(PROPERTY_TYPE, idProperty) {
     where: {
       idProperty,
     },
-    attributes: { exclude: ["idProperty"] },
+    attributes: {
+      exclude: ["idProperty", "idPh", "idRanch", "idApartment", "idHouse"],
+    },
   };
   try {
     switch (PROPERTY_TYPE) {
       case PropertyType.HOUSE:
         return await House.findOne(options);
       case PropertyType.PH:
-        break;
+        return await PH.findOne(options);
+
       case PropertyType.APARTMENT:
         return await Apartment.findOne(options);
       case PropertyType.RANCH:
-        break;
+        return await Ranch.findOne(options);
 
       default:
         break;
