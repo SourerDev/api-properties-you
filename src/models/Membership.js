@@ -1,10 +1,10 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize')
 // Exportamos una funcion que define el modelo
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define(
-    "Membership",
+    'Membership',
     {
       idMembership: {
         type: DataTypes.UUID,
@@ -17,9 +17,9 @@ module.exports = (sequelize) => {
 
       idMembershipType: {
         type: DataTypes.UUID,
-        defaultValue: "27990073-a398-4df6-89dd-533d457c47e8",
+        defaultValue: '27990073-a398-4df6-89dd-533d457c47e8',
       },
-      //Precio ya pagado por el usuario
+      // Precio ya pagado por el usuario
 
       price: {
         type: DataTypes.INTEGER,
@@ -31,14 +31,13 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
         get() {
-          if (this.getDataValue("state")) {
-            return "Activado";
-          } else {
-            return "Desactivado";
+          if (this.getDataValue('state')) {
+            return 'Activado'
           }
+          return 'Desactivado'
         },
       },
-      //visa- Mastercard o Dinero en Cuenta en Mercado Pago
+      // visa- Mastercard o Dinero en Cuenta en Mercado Pago
       payment: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -48,6 +47,6 @@ module.exports = (sequelize) => {
       timestamps: true,
       createdAt: true,
       updatedAd: true,
-    }
-  );
-};
+    },
+  )
+}

@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "User",
+    'User',
     {
       idUser: {
         type: DataTypes.UUID,
@@ -37,13 +37,13 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         get() {
-          return this.getDataValue("active") ? "online" : "offline";
+          return this.getDataValue('active') ? 'online' : 'offline'
         },
       },
       photo: {
         type: DataTypes.STRING,
         defaultValue:
-          "https://icons.veryicon.com/png/o/miscellaneous/two-color-icon-library/user-286.png",
+          'https://icons.veryicon.com/png/o/miscellaneous/two-color-icon-library/user-286.png',
       },
       user_auth_0: {
         type: DataTypes.BOOLEAN,
@@ -51,26 +51,26 @@ module.exports = (sequelize) => {
         defaultValue: false,
       },
       rating: {
-        type: DataTypes.ENUM("0", "1", "2", "3", "4", "5"),
-        defaultValue: "0",
+        type: DataTypes.ENUM('0', '1', '2', '3', '4', '5'),
+        defaultValue: '0',
       },
       userType: {
-        type: DataTypes.ENUM("admin", "premium", "logged"),
-        defaultValue: "logged",
+        type: DataTypes.ENUM('admin', 'premium', 'logged'),
+        defaultValue: 'logged',
       },
       cellphone: {
         type: DataTypes.BIGINT,
         allowNull: true,
       },
       state: {
-        type: DataTypes.ENUM("pending", "normal", "blocked"),
-        defaultValue: "pending",
+        type: DataTypes.ENUM('pending', 'normal', 'blocked'),
+        defaultValue: 'pending',
       },
     },
     {
       timestamps: false,
       createdAt: false,
       updatedAd: false,
-    }
-  );
-};
+    },
+  )
+}

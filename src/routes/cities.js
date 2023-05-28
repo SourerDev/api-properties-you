@@ -1,11 +1,5 @@
-var { Router } = require("express");
-var router = Router();
+const { Router } = require('express')
 
-//Destructuring de cities_controller donde tengo la logica
-const { getCitiesApi, getCities } = require("../controllers/cities");
+const router = Router()
 
-//Get all Cities
-router.get("/cities/Api", getCitiesApi);
-router.get("/cities", getCities);
-
-module.exports = router;
+module.exports = router

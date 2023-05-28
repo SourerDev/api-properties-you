@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Apartment",
+    'Apartment',
     {
       idApartment: {
         type: DataTypes.UUID,
@@ -28,6 +28,6 @@ module.exports = (sequelize) => {
     },
     {
       timestamps: false,
-    }
-  );
-};
+    },
+  )
+}

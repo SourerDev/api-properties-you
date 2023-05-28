@@ -1,9 +1,9 @@
-const { DataTypes } = require("sequelize");
-const { PropertyType } = require("../utils").entries;
+const { DataTypes } = require('sequelize')
+const { PropertyType } = require('../utils').entries
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Property",
+    'Property',
     {
       idProperty: {
         type: DataTypes.UUID,
@@ -49,12 +49,12 @@ module.exports = (sequelize) => {
           PropertyType.HOUSE,
           PropertyType.PH,
           PropertyType.APARTMENT,
-          PropertyType.RANCH
+          PropertyType.RANCH,
         ),
       },
     },
     {
       timestamps: false,
-    }
-  );
-};
+    },
+  )
+}

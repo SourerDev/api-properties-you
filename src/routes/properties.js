@@ -1,5 +1,6 @@
-const { Router } = require("express");
-const router = Router();
+const { Router } = require('express')
+
+const router = Router()
 const {
   createProperty,
   getAllProperties,
@@ -8,24 +9,29 @@ const {
   disableProperty,
   uplaodProperty,
   deleteProperty,
-} = require("../controllers/properties.js");
+} = require('../controllers/properties')
 
-//here
+// here
 const {
   authenticateToken,
   authorizePremium,
   noAuthorizeLogged,
-} = require("../middlewares");
+} = require('../middlewares')
 
-router.post("/", authenticateToken, authorizePremium, createProperty);
+router.post('/', authenticateToken, authorizePremium, createProperty)
 
-router.get("/all", getAllProperties);
-router.get("/getAllAddress", getAllAddress);
-router.get("/:idProperty", getPropertyById);
+router.get('/all', getAllProperties)
+router.get('/getAllAddress', getAllAddress)
+router.get('/:idProperty', getPropertyById)
 
-router.put("/disable/:id", disableProperty);
-router.put("/:id", uplaodProperty);
+router.put('/disable/:id', disableProperty)
+router.put('/:id', uplaodProperty)
 
-router.delete("/:idProperty", /* authenticateToken, authorizePremium, */ deleteProperty);
+router.delete(
+  '/:idProperty',
+  authenticateToken,
+  authorizePremium,
+  deleteProperty,
+)
 
-module.exports = router;
+module.exports = router

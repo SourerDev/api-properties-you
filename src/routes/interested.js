@@ -1,7 +1,8 @@
-var { Router } = require("express");
-var router = Router();
-const controller = require("../controllers/interested");
+const { Router } = require('express')
 
-router.post("/interested/userInterested", controller.userInterested);
+const router = Router()
+const controller = require('../controllers/interested')
 
-module.exports = router;
+router.post('/interested/userInterested', controller.userInterested)
+
+module.exports = router

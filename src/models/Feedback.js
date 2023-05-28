@@ -1,9 +1,9 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define(
-    "Feedback",
+    'Feedback',
 
     {
       idFeedback: {
@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      //id property
+      // id property
       idProperty: {
         type: DataTypes.UUID,
 
@@ -34,6 +34,6 @@ module.exports = (sequelize) => {
       timestamps: false,
       createdAt: false,
       updatedAd: false,
-    }
-  );
-};
+    },
+  )
+}

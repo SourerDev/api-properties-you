@@ -1,33 +1,30 @@
-const notifier = require("node-notifier");
-const path = require("path");
+const notifier = require('node-notifier')
+const path = require('path')
 const {
   User,
   Property,
   Favorite,
   Membership,
   MembershipType,
-} = require("../db.js");
-const {
-  transport,
-  registerMessage,
-} = require("../utils/nodemailer/nodemailer.js");
+} = require('../db')
+const { transport, registerMessage } = require('../utils/nodemailer/nodemailer')
 
-//here
-const { hashPassword, verifyPassword, generateToken } = require("../utils");
+// here
+const { hashPassword, verifyPassword, generateToken } = require('../utils')
 
-//POST
+// POST
 const signUp = async (req, res) => {
-  const { fName, lName, password, email, cellphone, userName } = req.body;
+  const { fName, lName, password, email, cellphone, userName } = req.body
   if (!fName || !lName || !cellphone || !password || !email)
-    return res.status(400).send("Some data are missing");
+    return res.status(400).send('Some data are missing')
 
   try {
     const findUser = await User.findOne({
-      where: { email: email },
-    });
+      where: { email },
+    })
 
-    if (findUser) return res.status(409).send("User already exist");
-    const hashPass = await hashPassword(password);
+    if (findUser) return res.status(409).send('User already exist')
+    const hashPass = await hashPassword(password)
     const _user = await User.create({
       lName,
       fName,
@@ -35,11 +32,11 @@ const signUp = async (req, res) => {
       email,
       cellphone,
       password: hashPass,
-    });
+    })
 
-    const user = {};
+    const user = {}
     for (const key in _user.dataValues) {
-      if (key !== "password") user[key] = _user[key];
+      if (key !== 'password') user[key] = _user[key]
     }
 
     const token = generateToken({
@@ -47,15 +44,15 @@ const signUp = async (req, res) => {
       email: user.email,
       user: user.userName,
       type: user.userType,
-    });
+    })
 
     return res.send({
       info: {
-        message: "Usuario created successfully",
+        message: 'Usuario created successfully',
       },
       user,
       token,
-    });
+    })
 
     /*     //notify property created succes
     notifier.notify(
@@ -75,121 +72,121 @@ const signUp = async (req, res) => {
     //NODEMAILER, SEND EMAIL TO USER
     const info = await transport.sendMail(registerMessage(userName, email)); */
   } catch (err) {
-    return res.status(500).send({ Error: err.message });
+    return res.status(500).send({ Error: err.message })
   }
-};
+}
 
 const signIn = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body
   if (!email || !password)
-    return res.status(404).json({ Error: "Email and password are required" });
+    return res.status(404).json({ Error: 'Email and password are required' })
 
   try {
     const _user = await User.findOne({
-      where: { email: email },
-    });
+      where: { email },
+    })
 
-    if (!_user) return res.status(404).json({ Error: "Email not found" });
+    if (!_user) return res.status(404).json({ Error: 'Email not found' })
 
-    const passwordMatch = await verifyPassword(_user.password, password);
+    const passwordMatch = await verifyPassword(_user.password, password)
     if (!passwordMatch)
-      return res.status(401).json({ Error: "Incorrect email or password." });
+      return res.status(401).json({ Error: 'Incorrect email or password.' })
 
-    if (_user.state === "blocked")
-      return res.status(401).json({ Error: "This user is blocked" });
+    if (_user.state === 'blocked')
+      return res.status(401).json({ Error: 'This user is blocked' })
 
     const token = generateToken({
       id: _user.idUser,
       email: _user.email,
       user: _user.userName,
       type: _user.userType,
-    });
+    })
 
-    const user = {};
+    const user = {}
     for (const key in _user.dataValues) {
-      if (key !== "password") user[key] = _user[key];
+      if (key !== 'password') user[key] = _user[key]
     }
 
-    res.json({ user, token: token });
+    res.json({ user, token })
   } catch (error) {
-    res.status(400).json({ Error: error.message });
+    res.status(400).json({ Error: error.message })
   }
-};
+}
 
-//GET
+// GET
 const getUserById = async (req, res) => {
-  const { idUser } = req.params;
+  const { idUser } = req.params
   try {
     const user = await User.findOne({
-      where: { idUser: idUser },
+      where: { idUser },
       include: { model: Favorite },
-    });
+    })
 
     if (!user)
       return res.status(404).json({
         error: {
-          message: "user not found",
+          message: 'user not found',
         },
-      });
+      })
 
-    res.status(200).json({ info: { status: 200, message: "Success" }, user });
+    res.status(200).json({ info: { status: 200, message: 'Success' }, user })
   } catch (err) {
-    res.status(400).json({ Error: err.message });
+    res.status(400).json({ Error: err.message })
   }
-};
+}
 
 const getUsers = async (req, res) => {
   try {
-    let users = await User.findAll({
+    const users = await User.findAll({
       include: { model: Membership },
-    });
+    })
 
     if (!users.length)
       return res.send({
-        error: { message: "No hay usuarios en la base de datos" },
-      });
+        error: { message: 'No hay usuarios en la base de datos' },
+      })
 
-    res.status(200).json({ info: { mesagge: "Success" }, users });
+    res.status(200).json({ info: { mesagge: 'Success' }, users })
   } catch (err) {
-    res.status(400).json({ Error: err.message });
+    res.status(400).json({ Error: err.message })
   }
-};
+}
 
-//PUT
+// PUT
 const setState = async (req, res) => {
-  const { idUser } = req.params;
-  const { state } = req.query;
+  const { idUser } = req.params
+  const { state } = req.query
 
   if (!state)
-    return res.status(400).json({ Error: "query ?state='' is required" });
+    return res.status(400).json({ Error: "query ?state='' is required" })
   try {
-    let user = await User.findByPk(idUser);
-    if (!user?.idUser) return res.status(404).json({ Error: "User not found" });
+    const user = await User.findByPk(idUser)
+    if (!user?.idUser) return res.status(404).json({ Error: 'User not found' })
 
     await User.update(
       { state },
       {
         where: {
-          idUser: idUser,
+          idUser,
         },
-      }
-    );
-    res.send({ Message: `Correct updated` });
+      },
+    )
+    res.send({ Message: 'Correct updated' })
   } catch (err) {
-    res.status(404).send({ Error: err.message });
+    res.status(404).send({ Error: err.message })
   }
-};
+}
 
 const updateUser = async (req, res) => {
-  const { idUser } = req.params;
-  if (idUser == undefined || idUser == null)
-    return res.status(400).json({ error: { message: "idUser is required" } });
+  const { idUser } = req.params
+  if (idUser === undefined || idUser == null)
+    return res.status(400).json({ error: { message: 'idUser is required' } })
 
   try {
-    const newData = {};
+    const newData = {}
     for (const key in req.body) {
-      if (["lName", "fName", "userName", "cellphone", "photo"].includes(key)) {
-        newData[key] = req.body[key];
+      if (['lName', 'fName', 'userName', 'cellphone', 'photo'].includes(key)) {
+        newData[key] = req.body[key]
       }
     }
 
@@ -197,58 +194,58 @@ const updateUser = async (req, res) => {
       where: {
         idUser,
       },
-    });
+    })
 
     const user = await User.findOne({
       where: { idUser },
-      attributes: { exclude: ["password"] },
-    });
+      attributes: { exclude: ['password'] },
+    })
     if (!user)
-      return res.status(404).json({ error: { message: "User not found" } });
+      return res.status(404).json({ error: { message: 'User not found' } })
 
     res.status(200).send({
       info: {
-        message: "user updated",
+        message: 'user updated',
       },
       user,
-    });
+    })
   } catch (err) {
-    res.status(404).send({ Error: err.message });
+    res.status(404).send({ Error: err.message })
   }
-};
+}
 
 const setPremium = async (req, res) => {
-  const { idUser } = req.params;
+  const { idUser } = req.params
   try {
     await User.update(
-      { userType: "Premium" },
+      { userType: 'Premium' },
       {
         where: {
-          idUser: idUser,
+          idUser,
         },
-      }
-    );
-    const user = await User.findByPk(idUser);
+      },
+    )
+    const user = await User.findByPk(idUser)
 
-    res.status(200).send({ Message: user });
+    res.status(200).send({ Message: user })
   } catch (err) {
-    res.status(404).send({ Error: err.message });
+    res.status(404).send({ Error: err.message })
   }
-};
+}
 
-//DELETE
+// DELETE
 const deleteUser = async (req, res) => {
-  const { idUser } = req.params;
-  if (!idUser) return res.status(404).send("idUser is required");
+  const { idUser } = req.params
+  if (!idUser) return res.status(404).send('idUser is required')
 
   try {
-    await User.destroy({ where: { idUser: idUser } });
+    await User.destroy({ where: { idUser } })
 
-    res.json({ Message: "User delete correctly" });
+    res.json({ Message: 'User delete correctly' })
   } catch (err) {
-    res.status(400).json({ Error: err.message });
+    res.status(400).json({ Error: err.message })
   }
-};
+}
 
 module.exports = {
   deleteUser,
@@ -259,4 +256,4 @@ module.exports = {
   signUp,
   signIn,
   updateUser,
-};
+}

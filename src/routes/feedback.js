@@ -1,19 +1,20 @@
-var { Router } = require("express");
-var router = Router();
+const { Router } = require('express')
+
+const router = Router()
 
 const {
   createFeedback,
-  feedbackById_Property,
-  feedbackById_User,
+  feedbackByIdProperty,
+  feedbackByIdUser,
   answerFeedback,
   deleteFeetback,
   // isBossFeedback,
-} = require("../controllers/feedback");
+} = require('../controllers/feedback')
 
-router.post("/feedback/createFeedback", createFeedback);
-router.get("/feedback/property/:id_Property", feedbackById_Property);
-router.get("/feedback/user/:id_User", feedbackById_User);
-router.post("/feedback/answerFeedback", answerFeedback);
-router.delete("/feedback/deleteFeetback/:id_Feedback", deleteFeetback);
+router.post('/feedback/createFeedback', createFeedback)
+router.get('/feedback/property/:id_Property', feedbackByIdProperty)
+router.get('/feedback/user/:id_User', feedbackByIdUser)
+router.post('/feedback/answerFeedback', answerFeedback)
+router.delete('/feedback/deleteFeetback/:id_Feedback', deleteFeetback)
 
-module.exports = router;
+module.exports = router

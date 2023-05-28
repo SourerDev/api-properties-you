@@ -1,9 +1,15 @@
-const {authenticateToken, handleJwtError,noAuthorizeLogged,authorizePremium,authorizeAdmin} = require("./jwt/jwtAuthMiddleware");
+const {
+  authenticateToken,
+  handleJwtError,
+  noAuthorizeLogged,
+  authorizePremium,
+  authorizeAdmin,
+} = require('./jwt/jwtAuthMiddleware')
 
 module.exports = {
-    authenticateToken,
-    authorizeAdmin,
-    authorizePremium,
-    handleJwtError,
-    noAuthorizeLogged
+  authenticateToken,
+  authorizeAdmin,
+  authorizePremium,
+  handleJwtError,
+  noAuthorizeLogged,
 }

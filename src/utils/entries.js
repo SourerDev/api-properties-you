@@ -1,29 +1,29 @@
 module.exports = {
   PropertyType: {
-    HOUSE: "house",
-    PH: "ph",
-    APARTMENT: "apartment",
-    RANCH: "ranch",
+    HOUSE: 'house',
+    PH: 'ph',
+    APARTMENT: 'apartment',
+    RANCH: 'ranch',
   },
   requiredPropertyEntries: {
     common: [
-      "address",
-      "idCity",
-      "description",
-      "photos",
-      "bedrooms",
-      "bathrooms",
-      "squareMeters",
-      "yearBuilt",
-      "type",
+      'address',
+      'idCity',
+      'description',
+      'photos',
+      'bedrooms',
+      'bathrooms',
+      'squareMeters',
+      'yearBuilt',
+      'type',
     ],
-    house: ["garage"],
-    ph: ["floorNumber", "balcony"],
-    apartment: ["floorNumber", "balcony"],
-    ranch: ["acreage", "barn"],
+    house: ['garage'],
+    ph: ['floorNumber', 'balcony'],
+    apartment: ['floorNumber', 'balcony'],
+    ranch: ['acreage', 'barn'],
   },
   requiredPublicationEntries: {},
-  checkRequiredPropertyEntries: function (PROPERTY) {
+  checkRequiredPropertyEntries: (PROPERTY) => {
     const {
       idCity,
       address,
@@ -35,11 +35,10 @@ module.exports = {
       description,
       idUser,
       type,
-    } = PROPERTY;
-    const { common, house, ph, apartment, ranch } =
-      this.requiredPropertyEntries;
+    } = PROPERTY
+    const { common, house, ph, apartment, ranch } = this.requiredPropertyEntries
 
-    const { HOUSE, PH, APARTMENT, RANCH } = this.PropertyType;
+    const { HOUSE, PH, APARTMENT, RANCH } = this.PropertyType
 
     if (
       ![
@@ -57,27 +56,27 @@ module.exports = {
     )
       return {
         missing: true,
-        message: `Missing data → ${common.join(", ")} are required`,
-      };
+        message: `Missing data → ${common.join(', ')} are required`,
+      }
 
-    const PROPERTY_TYPE = type.type;
+    const PROPERTY_TYPE = type.type
 
     if (PROPERTY_TYPE === HOUSE) {
       for (let i = 0; i < house.length; i++) {
         if (!type.hasOwnProperty(house[i])) {
           return {
             missing: true,
-            message: `Missing data → ${house.join(", ")} are required`,
-          };
+            message: `Missing data → ${house.join(', ')} are required`,
+          }
         }
       }
     } else if (PROPERTY_TYPE === PH) {
       for (let i = 0; i < ph.length; i++) {
-        if (!type.hasOwnProperty(entries.ph[i])) {
+        if (!type.hasOwnProperty(ph[i])) {
           return {
             missing: true,
-            message: `Missing data → ${ph.join(", ")} are required`,
-          };
+            message: `Missing data → ${ph.join(', ')} are required`,
+          }
         }
       }
     } else if (PROPERTY_TYPE === APARTMENT) {
@@ -85,35 +84,36 @@ module.exports = {
         if (!type.hasOwnProperty(apartment[i])) {
           return {
             missing: true,
-            message: `Missing data → ${apartment.join(", ")} are required`,
-          };
+            message: `Missing data → ${apartment.join(', ')} are required`,
+          }
         }
       }
     }
 
     return [HOUSE, PH, APARTMENT].includes(PROPERTY_TYPE)
       ? {
-          missing: false,
-        }
+        missing: false,
+      }
       : {
-          missing: true,
-          message: `Type property ${PROPERTY_TYPE} no valid`,
-        };
+        missing: true,
+        message: `Type property ${PROPERTY_TYPE} no valid`,
+      }
   },
-  checkRequiredPublicationEntries: function (PUBLISH) {
-    const { idProperty, idUser, price, modality } = PUBLISH;
+  checkRequiredPublicationEntries: (PUBLISH) => {
+    const { idProperty, idUser, price, modality } = PUBLISH
     if (![idProperty, idUser, price, modality].every(Boolean))
       return {
         missing: true,
-        message: `Missing data → idProperty, idUser, price, modality are required`,
-      };
-    
-      return {
+        message:
+          'Missing data → idProperty, idUser, price, modality are required',
+      }
+
+    return {
       missing: false,
-      message: { msg: "all is correct", temp: PUBLISH },
-    };
+      message: { msg: 'all is correct', temp: PUBLISH },
+    }
   },
-};
+}
 
 /*
     state: string, // Estado o provincia donde se encuentra la propiedad
@@ -160,5 +160,5 @@ module.exports = {
         pasture: boolean, // Indica si tiene pastizales
         pond: boolean, // Indica si tiene un estanque
     }
-}   
+}
 */

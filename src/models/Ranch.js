@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Ranch",
+    'Ranch',
     {
       idRanch: {
         type: DataTypes.UUID,
@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
         primaryKey: true,
       },
       acreage: {
-        type: DataTypes.DOUBLE
+        type: DataTypes.DOUBLE,
       },
       barn: {
         type: DataTypes.BOOLEAN,
@@ -27,6 +27,6 @@ module.exports = (sequelize) => {
     },
     {
       timestamps: false,
-    }
-  );
-};
+    },
+  )
+}

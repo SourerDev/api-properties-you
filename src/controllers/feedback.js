@@ -1,88 +1,86 @@
-const { User, Feedback, Property } = require("../db");
+const { User, Feedback, Property } = require('../db')
 
 const createFeedback = async (req, res) => {
   try {
-    var feedback = await Feedback.create(req.body);
+    const feedback = await Feedback.create(req.body)
 
     res.status(201).json({
-      Message: "feedback creado",
+      Message: 'feedback creado',
       payload: feedback,
-    });
+    })
   } catch (err) {
-    res.status(401).json({ Error: err.message });
+    res.status(401).json({ Error: err.message })
   }
-};
+}
 
-const feedbackById_Property = async (req, res, next) => {
-  console.log("holaaaa");
+const feedbackByIdProperty = async (req, res, next) => {
+  console.log('holaaaa')
   try {
-    var feedback = req.params.id;
+    const feedback = req.params.id
 
     if (feedback) {
-      var sql = await Feedback.findByPk(feedback);
+      const sql = await Feedback.findByPk(feedback)
+      res.status(200).json(sql)
     }
-
-    res.status(200).json(sql);
   } catch (error) {
     // Passes errors into the error handler
-    return next(error);
+    return next(error)
   }
-};
+}
 
 //
 
-const feedbackById_User = async (req, res) => {
-  console.log("holaaassssa");
+const feedbackByIdUser = async (req, res, next) => {
+  console.log('holaaassssa')
   try {
-    var id_user = req.params.id_User;
+    const idUser = req.params.id_User
 
-    if (id_user) {
-      var answer = await Feedback.findAll();
+    if (idUser) {
+      const answer = await Feedback.findAll()
+      res.status(200).json(answer)
     }
-
-    res.status(200).json(answer);
   } catch (error) {
     // Passes errors into the error handler
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const answerFeedback = async (req, res) => {
-  const { id_Feedback, answer } = req.body;
-  console.log(req.body, "ñaaa");
+  const { idFeedback, answer } = req.body
+  console.log(req.body, 'ñaaa')
   try {
-    let feedback = await Feedback.findByPk(id_Feedback);
-    console.log("hermes");
+    const feedback = await Feedback.findByPk(idFeedback)
+    console.log('hermes')
     const newAnswerFeedback = await Feedback.update(req.body, {
       where: {
-        id_Feedback: id_Feedback,
+        idFeedback: idFeedback,
       },
-    });
-    console.log(newAnswerFeedback, "lola", id_Feedback, answer);
-    if (newAnswerFeedback[0] === 0) throw new Error("Id inexistenteeee");
-    res.status(200).send({ Message: feedback });
+    })
+    console.log(newAnswerFeedback, 'lola', idFeedback, answer)
+    if (newAnswerFeedback[0] === 0) throw new Error('Id inexistenteeee')
+    res.status(200).send({ Message: feedback })
   } catch (err) {
-    res.status(404).send({ Error: err.message });
+    res.status(404).send({ Error: err.message })
   }
-};
+}
 
 const deleteFeetback = async (req, res) => {
-  const { id_Feedback } = req.params;
+  const { idFeedback } = req.params
   try {
-    if (!id_Feedback) return res.send("Id inexistente");
-    const deleteFeetback = await Feedback.destroy({
-      where: { id_Feedback: id_Feedback },
-    });
-    res.status(200).json({ Message: "Delete feedback succes" });
+    if (!idFeedback) return res.send('Id inexistente')
+    const deletedFeetback = await Feedback.destroy({
+      where: { idFeedback },
+    })
+    res.status(200).json({ Message: 'Delete feedback succes' })
   } catch (err) {
-    res.status(400).json({ Message: err.message });
+    res.status(400).json({ Message: err.message })
   }
-};
+}
 
 // const isBossFeedback = async (req, res, next) => {
-//   const { id_User, id_Feedback } = req.body;
+//   const { id_User, idFeedback } = req.body;
 //   try {
-//     let feetBackData = await Feedback.findByPk(id_Feedback);
+//     let feetBackData = await Feedback.findByPk(idFeedback);
 //     // console.log(feetBackData, "la dataa");
 //     let match = await Property.findByPk(feetBackData.id);
 
@@ -98,8 +96,8 @@ const deleteFeetback = async (req, res) => {
 
 module.exports = {
   createFeedback,
-  feedbackById_Property,
-  feedbackById_User,
+  feedbackByIdProperty,
+  feedbackByIdUser,
   answerFeedback,
   deleteFeetback,
-};
+}

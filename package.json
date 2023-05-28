@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./",
     "test": "mocha -w ./tests/**/*.spec.js",
-    "dev": "nodemon ./"
+    "dev": "nodemon ./",
+    "eslint": "eslint ."
   },
   "author": "Henry",
   "license": "ISC",
@@ -34,6 +35,9 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^8.41.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
     "mocha": "^8.2.1",
     "nodemon": "^2.0.6",
     "supertest": "^6.0.1",

@@ -1,22 +1,30 @@
-const { Router } = require("express");
-const router = Router();
+const { Router } = require('express')
+
+const router = Router()
 
 const {
   publishProperty,
   getPublicationById,
   getPublications,
-  disablePublication
-} = require("../controllers/publication");
-const { authenticateToken, authorizePremium } = require("../middlewares");
+  disablePublication,
+  savePublication,
+} = require('../controllers/publication')
+const { authenticateToken, authorizePremium } = require('../middlewares')
 
-//POST
-router.post("/", authenticateToken, authorizePremium, publishProperty);
+// POST
+router.post('/', authenticateToken, authorizePremium, publishProperty)
 
-//GET
-router.get("/all", getPublications);
-router.get("/:idPublication", getPublicationById);
+// GET
+router.get('/all', getPublications)
+router.get('/:idPublication', getPublicationById)
 
-//PUT
-router.put("/disable/:idPublication", authenticateToken, authorizePremium, disablePublication);
+// PUT
+router.put('/save', savePublication)
+router.put(
+  '/disable/:idPublication',
+  authenticateToken,
+  authorizePremium,
+  disablePublication,
+)
 
-module.exports = router;
+module.exports = router

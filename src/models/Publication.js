@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Publication",
+    'Publication',
     {
       idPublication: {
         type: DataTypes.UUID,
@@ -11,15 +11,15 @@ module.exports = (sequelize) => {
         primaryKey: true,
       },
       state: {
-        type: DataTypes.ENUM("pending", "approved", "acquired", "blocked"),
-        defaultValue: "pending",
+        type: DataTypes.ENUM('pending', 'approved', 'acquired', 'blocked'),
+        defaultValue: 'pending',
       },
       views: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
       modality: {
-        type: DataTypes.ENUM("sale", "rental"),
+        type: DataTypes.ENUM('sale', 'rental'),
       },
       price: {
         type: DataTypes.DOUBLE,
@@ -36,6 +36,6 @@ module.exports = (sequelize) => {
     },
     {
       timestamps: false,
-    }
-  );
-};
+    },
+  )
+}

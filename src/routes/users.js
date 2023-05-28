@@ -1,7 +1,4 @@
-var { Router } = require("express");
-var router = Router();
-const {authenticateToken,authorizeAdmin} = require('../middlewares')
-
+const { Router } = require('express')
 const {
   signUp,
   signIn,
@@ -11,18 +8,21 @@ const {
   updateUser,
   setPremium,
   deleteUser,
-} = require("../controllers/users.js");
+} = require('../controllers/users')
 
-router.post("/signup", signUp);
-router.post("/signin", signIn);
+const router = Router()
+const { authenticateToken, authorizeAdmin } = require('../middlewares')
 
-router.get("/all", getUsers);
-router.get("/:idUser", getUserById);
+router.post('/signup', signUp)
+router.post('/signin', signIn)
 
-router.put("/state/:idUser", authenticateToken,authorizeAdmin, setState)
-router.put("/premium/:idUser", setPremium);
-router.put("/:idUser", authenticateToken, updateUser);
+router.get('/all', getUsers)
+router.get('/:idUser', getUserById)
 
-router.delete("/:idUser",authenticateToken,  deleteUser);
+router.put('/state/:idUser', authenticateToken, authorizeAdmin, setState)
+router.put('/premium/:idUser', setPremium)
+router.put('/:idUser', authenticateToken, updateUser)
 
-module.exports = router;
+router.delete('/:idUser', authenticateToken, deleteUser)
+
+module.exports = router
