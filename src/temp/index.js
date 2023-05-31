@@ -40,7 +40,7 @@ async function addAdmin(Admin) {
   if (!Admin) return
 
   const hashPass = await hashPassword(Admin.password)
-  await User.create({ password: hashPass, ...Admin })
+  await User.create({ ...Admin, password: hashPass })
 }
 
 function getPropertiesByType(type) {

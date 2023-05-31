@@ -119,7 +119,8 @@
           "Piscina",
           "Jardín",
           "Estacionamiento privado"
-        ]
+        ],
+        "published": true
       },
       "type": {
         "type": "house",
@@ -154,7 +155,8 @@
           "Patio con parrilla",
           "TV",
           "Cocina equipada"
-        ]
+        ],
+        "published": true
       },
       "type": {
         "type": "house",
@@ -175,13 +177,16 @@
         "idCity": 660315,
         "description": "Moderno apartamento con acabados de lujo, en un sector exclusivo de la ciudad.",
         "photos": [
-          "https://cdn.pixabay.com/photo/2020/03/12/15/32/living-room-4929058_960_720.jpg"
+          "https://picsum.photos/800/600?random=7",
+          "https://picsum.photos/800/600?random=8",
+          "https://picsum.photos/800/600?random=9"
         ],
         "bedrooms": 3,
         "bathrooms": 2,
         "squareMeters": 120,
         "yearBuilt": 2019,
-        "amenities": ["Piscina", "Gimnasio", "Parqueadero"]
+        "amenities": ["Piscina", "Gimnasio", "Parqueadero"],
+        "published": true
       },
       "type": {
         "type": "ph",
@@ -202,14 +207,16 @@
         "idCity": 460098,
         "description": "Amplio y cómodo apartamento ubicado en el corazón de la ciudad, cerca a centros comerciales y restaurantes.",
         "photos": [
-          "https://cdn.pixabay.com/photo/2016/11/18/17/20/living-room-1835923_960_720.jpg",
-          "https://cdn.pixabay.com/photo/2016/11/18/17/20/living-room-1835923_960_720.jpg"
+          "https://picsum.photos/800/600?random=10",
+          "https://picsum.photos/800/600?random=11",
+          "https://picsum.photos/800/600?random=12"
         ],
         "bedrooms": 2,
         "bathrooms": 2,
         "squareMeters": 80,
         "yearBuilt": 2010,
-        "amenities": []
+        "amenities": [],
+        "published": true
       },
       "type": {
         "type": "ph",
@@ -230,13 +237,16 @@
         "idCity": 540007,
         "description": "Departamento amplio y luminoso con vista panorámica de la ciudad",
         "photos": [
-          "https://i.pinimg.com/originals/c8/cf/97/c8cf97b8cfa38d23e1cbed01d42b85f8.jpg"
+          "https://picsum.photos/800/600?random=13",
+          "https://picsum.photos/800/600?random=14",
+          "https://picsum.photos/800/600?random=15"
         ],
         "bedrooms": 2,
         "bathrooms": 2,
         "squareMeters": 90,
         "yearBuilt": 2015,
-        "amenities": ["piscina", "gimnasio", "sauna"]
+        "amenities": ["piscina", "gimnasio", "sauna"],
+        "published": true
       },
       "type": {
         "type": "apartment",
@@ -247,7 +257,7 @@
       },
       "publish": {
         "modality": "rental",
-        "price": 3020 
+        "price": 3020
       }
     },
     {
@@ -257,13 +267,16 @@
         "idCity": 700042,
         "description": "Hermoso apartamento en el centro de la ciudad, totalmente amueblado y equipado",
         "photos": [
-          "https://www.chicagotribune.com/resizer/G_sUvNcALQl6Ux2WnQz1_p9NGfY=/1200x0/top/arc-anglerfish-arc2-prod-tronc.s3.amazonaws.com/public/L6W4X6U2QZFPJOM6F3PN4WJTB4.jpg"
+          "https://picsum.photos/800/600?random=16",
+          "https://picsum.photos/800/600?random=17",
+          "https://picsum.photos/800/600?random=18"
         ],
         "bedrooms": 1,
         "bathrooms": 1,
         "squareMeters": 50,
         "yearBuilt": 2010,
-        "amenities": ["aire acondicionado", "calefacción", "wifi"]
+        "amenities": ["aire acondicionado", "calefacción", "wifi"],
+        "published": true
       },
       "type": {
         "type": "apartment",
@@ -274,7 +287,7 @@
       },
       "publish": {
         "modality": "rental",
-        "price": 2500 
+        "price": 2500
       }
     },
     {
@@ -284,13 +297,16 @@
         "idCity": 500028,
         "description": "Hermosa casa de campo en la Pampa Argentina, rodeada de campo y tranquilidad. Ideal para descansar y desconectar del mundo.",
         "photos": [
-          "https://images.unsplash.com/photo-1572119382613-cf9e9e7ccaa2?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=drew-coffman-sZGRXCpCtEw-unsplash.jpg"
+          "https://picsum.photos/800/600?random=19",
+          "https://picsum.photos/800/600?random=20",
+          "https://picsum.photos/800/600?random=21"
         ],
         "bedrooms": 2,
         "bathrooms": 2,
         "squareMeters": 300,
         "yearBuilt": 2010,
-        "amenities": ["Parrilla", "Piscina"]
+        "amenities": ["Parrilla", "Piscina"],
+        "published": true
       },
       "type": {
         "type": "ranch",
@@ -301,7 +317,7 @@
       },
       "publish": {
         "modality": "sale",
-        "price": 1500000 
+        "price": 1500000
       }
     },
     {
@@ -311,13 +327,16 @@
         "idCity": 660063,
         "description": "Granja en la provincia de Buenos Aires, con todas las comodidades para una estadía cómoda y tranquila. Rodeada de árboles y animales de granja.",
         "photos": [
-          "https://images.unsplash.com/photo-1620418133182-f122797b732f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=tirza-van-dijk-X8n9q_fJtVI-unsplash.jpg"
+          "https://picsum.photos/800/600?random=22",
+          "https://picsum.photos/800/600?random=23",
+          "https://picsum.photos/800/600?random=24"
         ],
         "bedrooms": 3,
         "bathrooms": 2,
         "squareMeters": 250,
         "yearBuilt": 2005,
-        "amenities": ["Parrilla", "Cancha de tenis"]
+        "amenities": ["Parrilla", "Cancha de tenis"],
+        "published": true
       },
       "type": {
         "type": "ranch",

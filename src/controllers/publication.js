@@ -104,7 +104,11 @@ module.exports = {
         },
         include: [
           { model: User, attributes: { exclude: ['password'] } },
-          { model: Property, attributes: { exclude: ['idUser'] } },
+          {
+            model: Property,
+            include: [{ model: City }],
+            attributes: { exclude: ['idUser', 'idCity'] },
+          },
         ],
         attributes: { exclude: ['idUser', 'idProperty'] },
       })
@@ -113,7 +117,7 @@ module.exports = {
         info: {
           quantity: publications.length,
         },
-        publications,
+        publications: [...publications,...publications],
       })
     } catch (error) {
       res.status(500).json({ Error: error.message })

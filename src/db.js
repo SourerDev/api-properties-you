@@ -7,7 +7,7 @@ const { sequelize } = require('./config')
 sequelize
   .authenticate()
   .then(() => console.log('DB-Connected'))
-  .catch((err) => console.log(err.message))
+  .catch((err) => console.error(err.message))
 const basename = path.basename(__filename)
 
 const modelDefiners = []

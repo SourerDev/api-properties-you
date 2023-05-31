@@ -52,6 +52,10 @@ module.exports = (sequelize) => {
           PropertyType.RANCH,
         ),
       },
+      published: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       timestamps: false,

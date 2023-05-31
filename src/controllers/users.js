@@ -120,6 +120,7 @@ const getUserById = async (req, res) => {
     const user = await User.findOne({
       where: { idUser },
       include: { model: Favorite },
+      attributes: { exclude: ['password'] },
     })
 
     if (!user)
@@ -139,6 +140,7 @@ const getUsers = async (req, res) => {
   try {
     const users = await User.findAll({
       include: { model: Membership },
+      attributes: { exclude: ['password'] },
     })
 
     if (!users.length)

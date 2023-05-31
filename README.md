@@ -1,3 +1,5 @@
+[![Action ci](https://github.com/SourerDev/api-properties-you/actions/workflows/action_ci.yml/badge.svg)](https://github.com/SourerDev/api-properties-you/actions/workflows/action_ci.yml)
+
 # Api - Properties & You
 
 Este repositorio es la API de Properties and You, que nos permitirá realizar solicitudes de información para presentarla en el front-end. Con esta API, podremos acceder a datos importantes sobre propiedades, como su ubicación, características y precios, para que los usuarios puedan buscar propiedades que se ajusten a sus necesidades específicas. Además, la API nos permitirá actualizar la información de las propiedades en tiempo real para garantizar que los usuarios estén viendo información precisa y actualizada.

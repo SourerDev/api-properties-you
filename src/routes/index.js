@@ -13,7 +13,7 @@ const users = require('./users')
 const router = Router()
 
 router.use('/', admin)
-router.use('/', cities)
+router.use('/city', cities)
 router.use('/', feedback)
 router.use('/', interested)
 router.use('/', mercado)
