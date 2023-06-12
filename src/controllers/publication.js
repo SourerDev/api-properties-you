@@ -13,6 +13,16 @@ const {
 const { checkRequiredPublicationEntries, PropertyType } =
   require('../utils').entries
 
+function addOpBetween(obj, key) {
+  const { min, max } = obj[key]
+  obj[key]
+    ? (obj[key] = {
+        [Op.between]: [min, max],
+      })
+    : delete obj[key]
+  return obj
+}
+
 module.exports = {
   publishProperty: async (req, res) => {
     const info = req.body
@@ -117,12 +127,51 @@ module.exports = {
         info: {
           quantity: publications.length,
         },
-        publications: [...publications,...publications],
+        publications: [...publications, ...publications],
       })
     } catch (error) {
       res.status(500).json({ Error: error.message })
     }
   },
+
+  getFilteredPublications: async (req, res) => {
+    try {
+      const { params, propertyParams, city } = req.body
+
+      params ? addOpBetween(params, 'price') : null
+      propertyParams ? addOpBetween(Property, 'squareMeters') : null
+      city ? addOpBetween(Property, 'yearBuilt') : null
+
+      const publications = await Publication.findAll({
+        where: {
+          enabled: true,
+          [Op.or]: [{ state: 'approved' }, { state: 'pending' }],
+          ...params,
+        },
+        include: [
+          { model: User, attributes: { exclude: ['password'] } },
+          {
+            model: Property,
+            attributes: { exclude: ['idUser', 'idCity'] },
+            where: propertyParams,
+            include: [{ model: City, where: city }],
+          },
+        ],
+      })
+
+      publications.length
+        ? res.status(200).json({
+            info: {
+              quantity: publications.length,
+            },
+            publications,
+          })
+        : res.status(204).send('no publications with the indicated filters')
+    } catch (error) {
+      res.status(500).json({ Error: error.message })
+    }
+  },
+
   disablePublication: async (req, res) => {
     const { idPublication } = req.params
     const { enabled } = req.query

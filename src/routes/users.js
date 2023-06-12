@@ -8,6 +8,7 @@ const {
   updateUser,
   setPremium,
   deleteUser,
+  googleSignin,
 } = require('../controllers/users')
 
 const router = Router()
@@ -15,6 +16,7 @@ const { authenticateToken, authorizeAdmin } = require('../middlewares')
 
 router.post('/signup', signUp)
 router.post('/signin', signIn)
+router.post('/google', googleSignin)
 
 router.get('/all', getUsers)
 router.get('/:idUser', getUserById)

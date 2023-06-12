@@ -63,7 +63,7 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       state: {
-        type: DataTypes.ENUM('pending', 'normal', 'blocked'),
+        type: DataTypes.ENUM('pending', 'verified', 'blocked'),
         defaultValue: 'pending',
       },
     },

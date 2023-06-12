@@ -11,6 +11,7 @@ const { transport, registerMessage } = require('../utils/nodemailer/nodemailer')
 
 // here
 const { hashPassword, verifyPassword, generateToken } = require('../utils')
+const { default: jwtDecode } = require('jwt-decode')
 
 // POST
 const signUp = async (req, res) => {
@@ -110,6 +111,50 @@ const signIn = async (req, res) => {
     res.json({ user, token })
   } catch (error) {
     res.status(400).json({ Error: error.message })
+  }
+}
+
+const googleSignin = async (req, res) => {
+  const { credential } = req.body
+  if (!credential) res.status(404).send('Credential is required')
+
+  const details = jwtDecode(credential)
+
+  try {
+    let user = await User.findOne({
+      where: { email: details.email },
+      attributes: { exclude: ['password'] },
+    })
+
+    if (!user) {
+      const hashPass = await hashPassword(`${details.jti}-${details.aud}`)
+      const _user = await User.create({
+        fName: details.given_name,
+        lName: details.family_name,
+        email: details.email,
+        userName: details.given_name.replace(' ','_'),
+        password: hashPass,
+        state: details.email_verified ? 'verified' : 'pending',
+      })
+      user = {}
+      for (const key in _user.dataValues) {
+        if (key !== 'password') user[key] = _user[key]
+      }
+    }
+
+    const token = generateToken({
+      id: user.idUser,
+      email: user.email,
+      user: user.userName,
+      type: user.userType,
+    })
+
+    return res.send({
+      user,
+      token,
+    })
+  } catch (error) {
+    res.send(error.mesagge)
   }
 }
 
@@ -253,6 +298,7 @@ module.exports = {
   deleteUser,
   getUserById,
   getUsers,
+  googleSignin,
   setPremium,
   setState,
   signUp,
