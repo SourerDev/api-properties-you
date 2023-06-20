@@ -17,7 +17,7 @@ router.post('/', authenticateToken, authorizePremium, publishProperty)
 
 // GET
 router.get('/all', getPublications)
-router.get('/filter', getFilteredPublications)
+router.post('/filter', getFilteredPublications)
 router.get('/:idPublication', getPublicationById)
 // PUT
 router.put('/save', savePublication)

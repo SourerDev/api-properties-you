@@ -132,6 +132,7 @@ const googleSignin = async (req, res) => {
         fName: details.given_name,
         lName: details.family_name,
         email: details.email,
+        photo: details.picture,
         userName: details.given_name.replace(' ','_'),
         password: hashPass,
         state: details.email_verified ? 'verified' : 'pending',
