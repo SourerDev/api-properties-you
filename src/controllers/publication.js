@@ -14,12 +14,6 @@ const { checkRequiredPublicationEntries, PropertyType } =
   require('../utils').entries
 
 function addOpBetween(obj, key) {
-  /* const { min, max } = obj[key]
-  obj[key]
-    ? (obj[key] = {
-        [Op.between]: [min, max],
-      })
-    : delete obj[key] */
   if (obj[key]) {
     const { min, max } = obj[key]
     obj[key] = {
@@ -158,8 +152,8 @@ module.exports = {
       byCity = deleteEmptyKeys(byCity)
 
       byPublication?.price ? addOpBetween(byPublication, 'price') : null
-      byProperty?.squareMeters ? addOpBetween(Property, 'squareMeters') : null
-      byProperty?.yearBuilt ? addOpBetween(Property, 'yearBuilt') : null
+      byProperty?.squareMeters ? addOpBetween(byProperty, 'squareMeters') : null
+      byProperty?.yearBuilt ? addOpBetween(byProperty, 'yearBuilt') : null
 
       const publications = await Publication.findAll({
         where: {
@@ -182,6 +176,7 @@ module.exports = {
         res.status(200).json({
           info: {
             quantity: publications.length,
+            objs: { byPublication, byProperty, byCity },
           },
           publications,
         })
@@ -205,6 +200,7 @@ module.exports = {
           info: {
             quantity: publications.length,
             error: 'no publications with the indicated filters',
+            objs: { byPublication, byProperty, byCity },
           },
           publications,
         })
@@ -242,15 +238,31 @@ module.exports = {
     }
   },
   savePublication: async (req, res) => {
-    const { idUser, idPublication } = req.body
-    const { remove } = req.query
+    const { idUser, idsPublication } = req.body
     try {
-      const publication = await Publication.findByPk(idPublication)
-      const user = await User.findByPk(idUser)
-      if (!remove) {
-        await user.addPublication(publication)
-      } else {
-        await user.removePublication(publication)
+      if (idsPublication?.length && idUser) {
+        console.log(idsPublication)
+        await Saved.destroy({
+          where: {
+            UserIdUser: idUser,
+          },
+          force: true
+        })
+
+        const user = await User.findByPk(idUser)
+        const publictns = await Publication.findAll({
+          where: {
+            idPublication: idsPublication,
+          },
+        })
+        await user.addPublications(publictns)
+      } else if(idsPublication) {
+        await Saved.destroy({
+          where: {
+            UserIdUser: idUser,
+          },
+          force: true
+        })
       }
 
       const publications = await Saved.findAll({
@@ -260,25 +272,21 @@ module.exports = {
         include: [
           {
             model: Publication,
-            include: [
-              { model: User, attributes: { exclude: ['password'] } },
-              {
-                model: Property,
-                include: [{ model: City }],
-                attributes: { exclude: ['idUser', 'idCity'] },
-              },
-            ],
             attributes: { exclude: ['idUser', 'idProperty'] },
           },
         ],
         attributes: { exclude: ['id', 'PublicationIdPublication'] },
+      })
+      const dictionary = {}
+      publications.forEach((p) => {
+        dictionary[p.Publication.idPublication] = p.UserIdUser
       })
 
       res.status(200).json({
         info: {
           quantity: publications.length,
         },
-        publications,
+        dictionary,
       })
     } catch (error) {
       res.status(500).json({ error: { message: error.message } })

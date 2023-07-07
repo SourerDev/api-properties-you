@@ -1,13 +1,13 @@
-const notifier = require('node-notifier')
-const path = require('path')
 const {
   User,
   Property,
-  Favorite,
   Membership,
   MembershipType,
+  Saved,
+  Publication,
+  City
 } = require('../db')
-const { transport, registerMessage } = require('../utils/nodemailer/nodemailer')
+const { sendMail, template } = require('../utils')
 
 // here
 const { hashPassword, verifyPassword, generateToken } = require('../utils')
@@ -43,9 +43,15 @@ const signUp = async (req, res) => {
     const token = generateToken({
       id: user.idUser,
       email: user.email,
-      user: user.userName,
       type: user.userType,
     })
+
+    await sendMail({
+      from: 'Bienvenido <jhonny30ca@gmail.com>',
+      to: user.email,
+      subject: 'Ahora eres parte de Properties and You',
+      template: template.registerMessage({userName: user.userName})
+    });
 
     return res.send({
       info: {
@@ -54,24 +60,6 @@ const signUp = async (req, res) => {
       user,
       token,
     })
-
-    /*     //notify property created succes
-    notifier.notify(
-      {
-        sound: true,
-        wait: true,
-        title: `Bienvenid@ ${myuser.userName}! `,
-        message: "Gracias por registrarte en Properties&&you",
-        icon: path.join(
-          "https://res.cloudinary.com/dg05pzjsq/image/upload/v1669030750/propertiesandyouicon_c9h24a.png"
-        ),
-      },
-      function (err, response) {
-        // console.log(err, response);
-      }
-    );
-    //NODEMAILER, SEND EMAIL TO USER
-    const info = await transport.sendMail(registerMessage(userName, email)); */
   } catch (err) {
     return res.status(500).send({ Error: err.message })
   }
@@ -99,7 +87,6 @@ const signIn = async (req, res) => {
     const token = generateToken({
       id: _user.idUser,
       email: _user.email,
-      user: _user.userName,
       type: _user.userType,
     })
 
@@ -133,7 +120,7 @@ const googleSignin = async (req, res) => {
         lName: details.family_name,
         email: details.email,
         photo: details.picture,
-        userName: details.given_name.replace(' ','_'),
+        userName: details.given_name.replace(' ', '_'),
         password: hashPass,
         state: details.email_verified ? 'verified' : 'pending',
       })
@@ -146,7 +133,6 @@ const googleSignin = async (req, res) => {
     const token = generateToken({
       id: user.idUser,
       email: user.email,
-      user: user.userName,
       type: user.userType,
     })
 
@@ -165,7 +151,6 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.findOne({
       where: { idUser },
-      include: { model: Favorite },
       attributes: { exclude: ['password'] },
     })
 
@@ -281,6 +266,35 @@ const setPremium = async (req, res) => {
   }
 }
 
+const updatePassword = async (req, res) => {
+  const { idUser } = req.params
+  const { password, newPassword } = req.body
+  if (!idUser || !password || !newPassword)
+    return res.status(401).json({ Error: 'Missing data' })
+
+  try {
+    const user = await User.findByPk(idUser)
+    if (!user) return res.status(401).json({ Error: 'Not Found' })
+    const passwordMatch = await verifyPassword(user.password, password)
+    if (!passwordMatch)
+      return res.status(401).json({ Error: 'Incorrect password.' })
+
+    const hashPass = await hashPassword(newPassword)
+    await User.update(
+      { password: hashPass },
+      {
+        where: {
+          idUser,
+        },
+      },
+    )
+    res.send('User Updated')
+  } catch (error) {
+    res.status(500).send({
+      Error: error.mesagge,
+    })
+  }
+}
 // DELETE
 const deleteUser = async (req, res) => {
   const { idUser } = req.params
@@ -295,6 +309,38 @@ const deleteUser = async (req, res) => {
   }
 }
 
+const getSaveds = async (req, res) => {
+  try {
+    const { idUser } = req.params
+    const publications = await Saved.findAll({
+      where: {
+        UserIdUser: idUser,
+      },
+      include: [
+        {
+          model: Publication,
+          include: [
+            { model: User, attributes: { exclude: ['password'] } },
+            {
+              model: Property,
+              include: [{ model: City }],
+              attributes: { exclude: ['idUser', 'idCity'] },
+            },
+          ],
+          attributes: { exclude: ['idUser', 'idProperty'] },
+        },
+      ],
+      attributes: { exclude: ['id', 'PublicationIdPublication'] },
+    })
+    res.json({
+      quantity: publications.length,
+      publications,
+    })
+  } catch (error) {
+    res.status(500).json({ error: { message: error.message}})
+  }
+}
+
 module.exports = {
   deleteUser,
   getUserById,
@@ -305,4 +351,6 @@ module.exports = {
   signUp,
   signIn,
   updateUser,
+  updatePassword,
+  getSaveds,
 }
