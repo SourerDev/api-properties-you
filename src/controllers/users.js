@@ -251,7 +251,7 @@ const setPremium = async (req, res) => {
   const { idUser } = req.params
   try {
     await User.update(
-      { userType: 'Premium' },
+      { userType: 'premium' },
       {
         where: {
           idUser,
